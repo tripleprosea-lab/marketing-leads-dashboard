@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: leads_dashboard_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: leads
+      POSTGRES_PASSWORD: leads
+      POSTGRES_DB: leads_dashboard
+    ports:
+      - "5432:5432"
+    volumes:
+      - leads_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U leads -d leads_dashboard"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  leads_pgdata:

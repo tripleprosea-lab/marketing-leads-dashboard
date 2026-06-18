@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LeadSource {
+  SEO
+  SEA
+  SOCIAL
+  DIRECT
+}
+
+enum EnrichmentStatus {
+  PENDING
+  DONE
+  FAILED
+  SKIPPED
+}
+
+enum AutomationType {
+  EMAIL
+  WHATSAPP
+}
+
+enum AutomationTrigger {
+  ON_ENTER
+}
+
+model Board {
+  id        String   @id @default(cuid())
+  name      String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  stages Stage[]
+  leads  Lead[]
+}
+
+model Stage {
+  id          String  @id @default(cuid())
+  boardId     String
+  name        String
+  order       Int
+  color       String  @default("#94a3b8") // hex
+  isWon       Boolean @default(false)
+  isLost      Boolean @default(false)
+  probability Float   @default(0) // 0..1, win-kans voor verwachte omzet
+
+  board       Board            @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  leads       Lead[]
+  automations AutomationRule[]
+
+  @@index([boardId])
+}
+
+model Lead {
+  id      String @id @default(cuid())
+  boardId String
+  stageId String
+  order   Int    @default(0)
+
+  // contact
+  firstName   String?
+  lastName    String?
+  email       String?
+  phone       String?
+  jobTitle    String?
+  linkedinUrl String?
+
+  // bedrijf
+  companyName     String?
+  companyDomain   String?
+  industry        String?
+  companySize     String?
+  companyLocation String?
+
+  // sales
+  dealValue       Decimal? @db.Decimal(12, 2)
+  expectedRevenue Decimal? @db.Decimal(12, 2)
+  notes           String?
+
+  // meta
+  source           LeadSource       @default(DIRECT)
+  originBron       String           @default("manual")
+  enrichmentStatus EnrichmentStatus @default(PENDING)
+  enrichmentData   Json?
+  rawPayload       Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  board      Board         @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  stage      Stage         @relation(fields: [stageId], references: [id], onDelete: Restrict)
+  activities ActivityLog[]
+
+  @@index([boardId])
+  @@index([stageId])
+}
+
+model AutomationRule {
+  id      String            @id @default(cuid())
+  stageId String
+  type    AutomationType
+  trigger AutomationTrigger @default(ON_ENTER)
+  enabled Boolean           @default(true)
+  subject String?
+  body    String?
+  config  Json?
+
+  stage Stage @relation(fields: [stageId], references: [id], onDelete: Cascade)
+
+  @@index([stageId])
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  leadId    String
+  type      String
+  message   String
+  createdAt DateTime @default(now())
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+}
