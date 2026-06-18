@@ -39,6 +39,19 @@ De backend voert bij het opstarten automatisch de database-migraties uit en seed
 standaard bord met 7 fases + demo-leads. Stoppen: `Ctrl+C`, daarna `docker compose down`
 (voeg `-v` toe om ook de databasegegevens te wissen).
 
+## Pakket maken om te delen
+
+Wil je het project naar iemand anders sturen die het zelf in Docker draait? Maak een
+broncode-zip:
+
+```bash
+bash scripts/package.sh
+```
+
+Dit maakt `leads-dashboard-<datum>.zip` met alle (gecommitte) broncode — zonder `node_modules`,
+`.env` of andere artifacts. De ontvanger pakt het uit en draait `docker compose up --build`; de
+volledige instructie staat in [`RUN.md`](RUN.md) (komt mee in de zip).
+
 ## Lokaal draaien zonder Docker (ontwikkelmodus)
 
 ```bash
