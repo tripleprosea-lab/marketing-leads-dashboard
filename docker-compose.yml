@@ -17,5 +17,38 @@ services:
       timeout: 5s
       retries: 5
 
+  server:
+    build:
+      context: ./server
+    container_name: leads_dashboard_server
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://leads:leads@db:5432/leads_dashboard?schema=public"
+      PORT: "4000"
+      CORS_ORIGIN: "http://localhost:8080"
+      # Optionele koppelingen — vul in via een .env-bestand in de projectroot.
+      WORDPRESS_WEBHOOK_SECRET: "${WORDPRESS_WEBHOOK_SECRET:-}"
+      EXA_API_KEY: "${EXA_API_KEY:-}"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      ENRICHMENT_MODEL: "${ENRICHMENT_MODEL:-claude-opus-4-8}"
+      ACTIVECAMPAIGN_API_URL: "${ACTIVECAMPAIGN_API_URL:-}"
+      ACTIVECAMPAIGN_API_KEY: "${ACTIVECAMPAIGN_API_KEY:-}"
+      ZAPIER_WHATSAPP_WEBHOOK_URL: "${ZAPIER_WHATSAPP_WEBHOOK_URL:-}"
+    ports:
+      - "4000:4000"
+
+  client:
+    build:
+      context: ./client
+    container_name: leads_dashboard_client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "8080:80"
+
 volumes:
   leads_pgdata:

@@ -19,14 +19,34 @@ Een kanban-dashboard voor leadbeheer met WordPress-intake, AI-verrijking en auto
 - **Backend**: Node + Express + TypeScript + Prisma (`/server`)
 - **Database**: PostgreSQL
 
-## Snel starten
+## Snel starten met Docker (aanbevolen)
+
+De hele stack (database + backend + frontend) draait met één commando. Je hebt alleen
+**Docker Desktop** (of Docker Engine + Compose) nodig.
+
+```bash
+# 1. (optioneel) externe koppelingen instellen
+cp .env.example .env          # vul alleen de keys in die je wilt; alles is optioneel
+
+# 2. Bouwen en starten
+docker compose up --build
+```
+
+- **Dashboard**: http://localhost:8080
+- **API**: http://localhost:4000/api/health
+
+De backend voert bij het opstarten automatisch de database-migraties uit en seedt het
+standaard bord met 7 fases + demo-leads. Stoppen: `Ctrl+C`, daarna `docker compose down`
+(voeg `-v` toe om ook de databasegegevens te wissen).
+
+## Lokaal draaien zonder Docker (ontwikkelmodus)
 
 ```bash
 # 1. Dependencies
 npm install
 
 # 2. Database (Postgres via Docker)
-npm run db:up
+docker compose up -d db
 
 # 3. Env instellen
 cp .env.example server/.env   # vul keys aan waar gewenst (alles is optioneel)
