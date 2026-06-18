@@ -32,7 +32,7 @@ cp .env.example .env          # vul alleen de keys in die je wilt; alles is opti
 docker compose up --build
 ```
 
-- **Dashboard**: http://localhost:8080
+- **Dashboard**: http://localhost:8090
 - **API**: http://localhost:4000/api/health
 
 De backend voert bij het opstarten automatisch de database-migraties uit en seedt het

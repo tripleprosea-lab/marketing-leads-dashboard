@@ -28,7 +28,7 @@ services:
     environment:
       DATABASE_URL: "postgresql://leads:leads@db:5432/leads_dashboard?schema=public"
       PORT: "4000"
-      CORS_ORIGIN: "http://localhost:8080"
+      CORS_ORIGIN: "http://localhost:8090"
       # Optionele koppelingen — vul in via een .env-bestand in de projectroot.
       WORDPRESS_WEBHOOK_SECRET: "${WORDPRESS_WEBHOOK_SECRET:-}"
       EXA_API_KEY: "${EXA_API_KEY:-}"
@@ -48,7 +48,7 @@ services:
     depends_on:
       - server
     ports:
-      - "8080:80"
+      - "8090:80"
 
 volumes:
   leads_pgdata:
