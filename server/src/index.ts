@@ -6,6 +6,7 @@ import { stagesRouter } from "./routes/stages.js";
 import { leadsRouter } from "./routes/leads.js";
 import { automationsRouter } from "./routes/automations.js";
 import { webhooksRouter } from "./routes/webhooks.js";
+import { integrationsRouter } from "./routes/integrations.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use("/api/stages", stagesRouter);
 app.use("/api/leads", leadsRouter);
 app.use("/api/automations", automationsRouter);
 app.use("/api/webhooks", webhooksRouter);
+app.use("/api/integrations", integrationsRouter);
 
 // Generieke foutafhandeling
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

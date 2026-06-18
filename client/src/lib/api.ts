@@ -1,4 +1,4 @@
-import type { Board, Lead, Stage, AutomationRule } from "./types.js";
+import type { Board, Lead, Stage, AutomationRule, Integrations } from "./types.js";
 
 async function http<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(url, {
@@ -14,6 +14,7 @@ async function http<T>(url: string, options?: RequestInit): Promise<T> {
 
 export const api = {
   getDefaultBoard: () => http<Board>("/api/boards/default"),
+  getIntegrations: () => http<Integrations>("/api/integrations"),
 
   // Leads
   createLead: (data: Partial<Lead> & { boardId: string }) =>

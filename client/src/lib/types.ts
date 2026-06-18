@@ -67,3 +67,11 @@ export interface Board {
   stages: Stage[];
   leads: Lead[];
 }
+
+export interface Integrations {
+  exa: boolean;
+  anthropic: boolean;
+  activecampaign: boolean;
+  zapier: boolean;
+  wordpressSecret: boolean;
+}
